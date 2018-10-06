@@ -1,0 +1,32 @@
+version: 1.0.{build}
+install:
+- ps: >-
+    $url_flex = "https://github.com/qt/qt5/blob/5.11/gnuwin32/bin/flex.exe"
+
+    Invoke-WebRequest -Uri $url_flex -OutFile flex.exe
+build_script:
+- cmd: >-
+    "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86
+
+    set PATH=%APPVEYOR_BUILD_FOLDER%;%PATH%
+
+    configure -release -static -platform win32-msvc -opensource -confirm-license -nomake examples -nomake tests -nomake tools
+
+    nmake sub-src-qmake_all
+
+    cd src
+
+    nmake sub-corelib
+
+    nmake sub-gui
+
+    nmake sub-widgets
+
+    nmake sub-sql
+
+    nmake sub-plugins
+test_script:
+- ps: >-
+    $blockRdp = $true;
+
+    iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
