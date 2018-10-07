@@ -13,7 +13,7 @@ install:
             [System.IO.Compression.ZipFile]::ExtractToDirectory($zipfile, $outpath)
         }
 
-    Unzip "qt5.zip" "qt5"
+    Unzip "%APPVEYOR_BUILD_FOLDER%\qt5.zip" "%APPVEYOR_BUILD_FOLDER%\qt5"
 build_script:
 - cmd: >-
     "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86
