@@ -69,3 +69,13 @@ on_failure:
 artifacts:
 - path: qtbase-static.zip
   name: qtbase-static.zip
+deploy:
+- provider: GitHub
+  tag: static_build
+  auth_token:
+    secure: W7JLxvnniqhXZBxlDp+7Trvha98AEWJhNuaQJGWRpHjglB78ffZ/e6mRIHnQC9yt
+  artifact: qtbase-static.zip
+  draft: true
+  prerelease: false
+  force_update: true
+  
