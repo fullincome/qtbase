@@ -1,18 +1,24 @@
 version: 1.0.{build}
 install:
 - ps: >-
-    $url_flex = "https://github.com/qt/qt5/raw/5.11/gnuwin32/bin/flex.exe"
+    $url_qt5 = "https://github.com/qt/qt5/archive/v5.11.1.zip"
 
-    $url_bison = "https://github.com/qt/qt5/raw/5.11/gnuwin32/bin/bison.exe"
+    Invoke-WebRequest -Uri $url_qt5 -OutFile qt5.zip
 
-    Invoke-WebRequest -Uri $url_flex -OutFile flex.exe
+    Add-Type -AssemblyName System.IO.Compression.FileSystem
 
-    Invoke-WebRequest -Uri $url_bison -OutFile bison.exe
+    function Unzip
+        {
+            param([string]$zipfile, [string]$outpath)
+            [System.IO.Compression.ZipFile]::ExtractToDirectory($zipfile, $outpath)
+        }
+
+    Unzip "qt5.zip" "qt5"
 build_script:
 - cmd: >-
     "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86
 
-    set PATH=%APPVEYOR_BUILD_FOLDER%;%PATH%
+    set PATH=%APPVEYOR_BUILD_FOLDER%\qt5\qt5-5.11.1\gnuwin32\bin;%PATH%
 
     configure -release -static -platform win32-msvc -opensource -confirm-license -nomake examples -nomake tests -nomake tools
 
