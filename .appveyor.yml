@@ -1,7 +1,7 @@
 version: 1.0.{build}
 install:
 - ps: >-
-    $url_flex = "https://github.com/qt/qt5/blob/5.11/gnuwin32/bin/flex.exe"
+    $url_flex = "https://github.com/qt/qt5/raw/5.11/gnuwin32/bin/flex.exe"
 
     Invoke-WebRequest -Uri $url_flex -OutFile flex.exe
 build_script:
