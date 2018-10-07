@@ -3,7 +3,11 @@ install:
 - ps: >-
     $url_flex = "https://github.com/qt/qt5/raw/5.11/gnuwin32/bin/flex.exe"
 
+    $url_bison = "https://github.com/qt/qt5/raw/5.11/gnuwin32/bin/bison.exe"
+
     Invoke-WebRequest -Uri $url_flex -OutFile flex.exe
+
+    Invoke-WebRequest -Uri $url_bison -OutFile bison.exe
 build_script:
 - cmd: >-
     "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86
@@ -25,8 +29,7 @@ build_script:
     nmake sub-sql
 
     nmake sub-plugins
-test_script:
+on_failure:
 - ps: >-
     $blockRdp = $true;
-
     iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
