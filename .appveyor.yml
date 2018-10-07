@@ -20,9 +20,13 @@ build_script:
 
     set PATH=%APPVEYOR_BUILD_FOLDER%\qt5\qt5-5.11.1\gnuwin32\bin;%PATH%
 
-    configure -release -static -platform win32-msvc -opensource -confirm-license -nomake examples -nomake tests -nomake tools
+    set QT_INSTALL_PATH="C:\Qt\5.11.1\Static-5.11.1"
+
+    configure -prefix %QT_INSTALL_PATH% -release -static -platform win32-msvc -opensource -confirm-license -nomake examples -nomake tests -nomake tools
 
     nmake sub-src-qmake_all
+
+    nmake sub-qmake-qmake-aux-pro
 
     cd src
 
@@ -30,12 +34,38 @@ build_script:
 
     nmake sub-gui
 
+    nmake sub-winmain
+
     nmake sub-widgets
 
     nmake sub-sql
 
     nmake sub-plugins
+
+
+    nmake sub-corelib-install_subtargets
+
+    nmake sub-gui-install_subtargets
+
+    nmake sub-winmain-install_subtargets
+
+    nmake sub-widgets-install_subtargets
+
+    nmake sub-sql-install_subtargets
+
+    nmake sub-plugins-install_subtargets
+
+    cd ..
+
+    nmake sub-qmake-qmake-aux-pro-install_subtargets
+
+    nmake install_mkspecs
+
+    7z a qtbase-static.zip %QT_INSTALL_PATH%\*
 on_failure:
 - ps: >-
     $blockRdp = $true;
     iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+artifacts:
+- path: qtbase-static.zip
+  name: qtbase-static.zip
